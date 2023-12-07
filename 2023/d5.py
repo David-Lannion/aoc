@@ -54,6 +54,15 @@ humidity-to-location map:
 60 56 37
 56 93 4"""
 
+# example2 = """seeds: 0 4 0 14 0 22 8 6 18 4 8 14
+example2 = """seeds: 0 4 8 6 18 4
+
+seed-to-soil map:
+105 5 12
+52 50 48
+
+soil-to-fertilizer map:
+1000 0 1000"""
 
 class Almanac:
     """The almanac (your puzzle input) lists all of the seeds that need to be planted.
@@ -70,21 +79,91 @@ class Almanac:
     describes how to convert a seed number (the source) to a soil number (the destination).
     This lets the gardener and his team know which soil to use with which seeds,
     which water to use with which fertilizer, and so on."""
-    def __init__(self, data):
+
+    def __init__(self, data, part2=False):
         lines = re.split(r"\n\n+", data)
         # Take the example,the almanac starts by listing which seeds need to be planted: seeds 79, 14, 55, and 13.
-        self.seeds = lines[0][6:].strip().split(" ")
-        self.maps = {}
+        self.seeds = [int(e) for e in lines[0][6:].strip().split(" ")]
+        if part2:
+            self.seeds_group = []
+            for sect in range(int(len(self.seeds) / 2)):
+                # seeds_group is a list of [start, range]
+                self.seeds_group.append([self.seeds[2 * sect], self.seeds[2 * sect] - 1 + self.seeds[2 * sect + 1]])
+            sorted(self.seeds_group)
+            # print("Seed groups made")
+        self.next = []
         self.base = {}
         self.dest = {}
+
         for map in lines[1:]:
-            map_split = [int(e) for e in map.split("\n")]
+            map_split = map.split("\n")
             map_info = re.match(r"(?P<from>\w+)-to-(?P<to>\w+) map:", map_split[0])
-            self.maps[map_info['from']] = [
-                [int(e) for e in line.split(" ")] for line in map_split[1:]
+            self.base[map_info['from']] = map_info['to']
+            self.dest[map_info['to']] = [
+                # road = [start_dest, start_source, range] => [start_source, start_dest, range]
+                self.road(line.split(" ")) for line in map_split[1:]
             ]
-            self.dest[map_info['from']] = map_info['to']
-            self.dest[map_info['to']] = self.maps[map_info['from']]
+
+    @staticmethod
+    def road(e):
+        start_source = int(e[1])
+        start_dest = int(e[0])
+        range_size = int(e[2])
+        road = [
+            start_source, start_dest, range_size,
+            range_size + start_source - 1,  # 3: add end_source
+            start_dest - start_source  # 4: add affine transformation
+        ]
+        return road
+
+    @staticmethod
+    def in_range(elem, road):
+        # start_source <= elem <= end_source
+        return road[0] <= elem <= road[3]
+
+    def range_in_range(self, group, road):
+        # print(f"  range_in_range : {group} against {road}")
+        # print(f"  {self.next}")
+        start = group[0]
+        end = group[1]
+        f_start = road[0]
+        f_end = road[3]
+        # print(f"  [{start};{end}]::[{f_start};{f_end}]")
+        if (end < f_start) or (start > f_end):
+            # Intersection is void
+            # print("  => Intersection is void")
+            return False  # [start, end]
+        if end < f_end:
+            if start < f_start:
+                # case group inter road min => 2 groups
+                # print("  => case group inter road min")
+                # print(f"    --> {[[start, f_start - 1], [road[1], end + road[4]]]}")
+                self.next.append([start, f_start - 1])
+                self.next.append([road[1], end + road[4]])
+            else:
+                # case group in road => 1 group
+                # print("  => case group in road")
+                # print(f"    --> {[[start + road[4], end + road[4]]]}")
+                self.next.append([start + road[4], end + road[4]])
+        else:
+            if start < f_start:
+                # case road in group => 3 groups
+                # print("  => case road in group")
+                # print(f"    --> {[[start, f_start - 1], [road[1], f_end + road[4]], [f_end + 1, end]]}")
+                self.next.append([start, f_start - 1])
+                self.next.append([road[1], f_end + road[4]])
+                self.next.append([f_end + 1, end])
+            else:
+                # case group inter road max => 2 groups
+                # print("  => case group inter road max")
+                # print(f"    --> {[[start + road[4], f_end + road[4]], [f_end + 1, end]]}")
+                self.next.append([start + road[4], f_end + road[4]])
+                self.next.append([f_end + 1, end])
+        # print(f"  :{self.next}")
+        return True  # (f_start <= start <= f_end) or (f_start <= end <= f_end) or (start <= f_start <= end)
+
+    def transform_elem(self, elem, road):
+        self.next.append(road[4] + elem)
 
 
 def c2023d5p1(data=example):
@@ -150,13 +229,88 @@ def c2023d5p1(data=example):
         What is the lowest location number that corresponds to any of the initial seed numbers?
     """
     almanac = Almanac(data)
-    return 35
+    cursor = "seed"
+    almanac.next = almanac.seeds
+    while cursor in almanac.base:
+        cursor = almanac.base[cursor]
+        mapper = almanac.dest[cursor]
+        current_list = almanac.next
+        almanac.next = []
+        for elem_id in range(len(current_list)):
+            elem = current_list[elem_id]
+            found = False
+            for road in mapper:
+                if almanac.in_range(elem, road):
+                    almanac.transform_elem(elem, road)
+                    found = True
+                    break
+            if not found:
+                almanac.next.append(elem)
+    return min(almanac.next)
 
 
 def c2023d5p2(data=example):
     """--- Part Two ---
+    Everyone will starve if you only plant such a small number of seeds. Re-reading the almanac,
+    it looks like the seeds: line actually describes ranges of seed numbers.
+
+    The values on the initial seeds: line come in pairs. Within each pair,
+    the first value is the start of the range and the second value is the length of the range.
+    So, in the first line of the example above:
+
+    seeds: 79 14 55 13
+    This line describes two ranges of seed numbers to be planted in the garden.
+    The first range starts with seed number 79 and contains 14 values: 79, 80, ..., 91, 92.
+    The second range starts with seed number 55 and contains 13 values: 55, 56, ..., 66, 67.
+
+    Now, rather than considering four seed numbers, you need to consider a total of 27 seed numbers.
+
+    In the above example, the lowest location number can be obtained from seed number 82, which corresponds to soil 84,
+    fertilizer 84, water 84, light 77, temperature 45, humidity 46, and location 46.
+    So, the lowest location number is 46.
+
+    Consider all of the initial seed numbers listed in the ranges on the first line of the almanac.
+    What is the lowest location number that corresponds to any of the initial seed numbers?
     """
-    pass
+    almanac = Almanac(data, True)
+    cursor = "seed"
+    almanac.next = almanac.seeds_group
+    # print(cursor)
+    # print(almanac.next)
+    while cursor in almanac.base:
+        cursor = almanac.base[cursor]
+        mapper = almanac.dest[cursor]
+        current_list = almanac.next
+        almanac.next = []
+        for elem_id in range(len(current_list)):
+            elem = current_list[elem_id]
+            found = False
+            for road in mapper:
+                found = almanac.range_in_range(elem, road)
+                if found:
+                    break
+            if not found:
+                # print("  => Intersection is void")
+                # print(f"    --> {elem}")
+                almanac.next.append(elem)
+        # Sorting list to merge duplicate
+        sorted_list = sorted(almanac.next)
+        almanac.next = []
+        curr = sorted_list[0]
+        for e in sorted_list:
+            if curr[1] > e[0]:
+                curr[1] = e[1]
+            else:
+                almanac.next.append(curr)
+                curr = e
+        if curr != almanac.next[-1]:
+            almanac.next.append(curr)
+        # print(cursor)
+        # print(almanac.next)
+
+        # exit()
+    print(sorted(almanac.next))
+    return sorted(almanac.next)[0][0]
 
 
 if __name__ == "__main__":
@@ -164,12 +318,12 @@ if __name__ == "__main__":
     print("####    TEST ALGO   ####")
     ok = "ok" if c2023d5p1() == 35 else "ko"
     print(f"##  c2023d5p1 => {ok}    #")
-    ok = "ok" if c2023d5p2() == 30 else "ko"
+    ok = "ok" if c2023d5p2() == 46 else "ko"
     print(f"##  c2023d5p2 => {ok}    #")
     print("########################")
     print("#   WITH PUZZLE INPUT  #")
     with open('2023/d5.txt', 'r') as file:
         input_data: str = file.read()
-        print(f"# c2023d5p1 => {c2023d5p1(input_data)}   #")
+        print(f"# c2023d5p1 => {c2023d5p1(input_data)} #")
         print(f"# c2023d5p2 => {c2023d5p2(input_data)} #")
     print("########################")
