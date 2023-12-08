@@ -19,6 +19,7 @@
 
 """
 import re
+import time
 
 example = """seeds: 79 14 55 13
 
@@ -272,6 +273,7 @@ def c2023d5p2(data=example):
     Consider all of the initial seed numbers listed in the ranges on the first line of the almanac.
     What is the lowest location number that corresponds to any of the initial seed numbers?
     """
+    start_time = time.time()
     almanac = Almanac(data, True)
     cursor = "seed"
     almanac.next = almanac.seeds_group
@@ -310,6 +312,11 @@ def c2023d5p2(data=example):
 
         # exit()
     print(sorted(almanac.next))
+    end = time.time()
+    total_time = end - start_time
+    seconds = int(total_time)
+    print("#" * 80)
+    print(f"TIME ELAPSED FOR THE TESTS : {seconds} sec")
     return sorted(almanac.next)[0][0]
 
 
