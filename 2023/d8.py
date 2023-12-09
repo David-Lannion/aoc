@@ -75,14 +75,14 @@ def make_map(lines):
         }
         if cross[2] == "A":
             positions.append(cross[0:3])
-    with open('2023/d8.dot', 'w') as file:
-        file.write("digraph day8 {\n")
-        for m in map_data:
-            file.write(f'  "{m}" -> "{map_data[m]["L"]}" \n')
-            file.write(f'  "{m}" -> "{map_data[m]["R"]}" \n')
-        file.write("}\n")
-        file.close()
-        exit()
+    # with open('2023/d8.dot', 'w') as file:
+    #     file.write("digraph day8 {\n")
+    #     for m in map_data:
+    #         file.write(f'  "{m}" -> "{map_data[m]["L"]}" \n')
+    #         file.write(f'  "{m}" -> "{map_data[m]["R"]}" \n')
+    #     file.write("}\n")
+    #     file.close()
+    #     exit()
     return map_data, positions
 
 
@@ -126,8 +126,8 @@ def c2023d8p2(data=example2):
 if __name__ == "__main__":
     print("########################")
     print("####    TEST ALGO   ####")
-    # ok = "ok" if c2023d8p1() == 2 else "ko"
-    # print(f"##  c2023d8p1 => {ok}    #")
+    ok = "ok" if c2023d8p1() == 2 else "ko"
+    print(f"##  c2023d8p1 => {ok}    #")
     ok = "ok" if c2023d8p2() == 6 else "ko"
     print(f"##  c2023d8p2 => {ok}    #")
     print("########################")
