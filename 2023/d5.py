@@ -93,6 +93,7 @@ class Almanac:
             sorted(self.seeds_group)
             # print("Seed groups made")
         self.next = []
+        self.inter = []
         self.base = {}
         self.dest = {}
 
