@@ -27,7 +27,7 @@ class DayBase:
     def run(self, part1=None, part2=None):
         print("########################")
         print("#   WITH PUZZLE INPUT  #")
-        with open(f'.{os.sep}src{os.sep}{self.year}{os.sep}d{self.day}.txt', 'r') as file:
+        with open(f'.{os.sep}src{os.sep}{self.year}{os.sep}data{os.sep}d{self.day}.txt', 'r') as file:
             input_data: str = file.read()
             self.write(1, input_data, part1)
             self.write(2, input_data, part2)

@@ -17,9 +17,9 @@ if __name__ == "__main__":
         print("Create ? y/n")
         create = input() == 'y'
         if create:
-            base_name = f".{os.sep}src{os.sep}{options.year}{os.sep}d{options.day}"
-            open(f"{base_name}.txt", "w").close()
-            with open(f"{base_name}.py", "w") as file:
+            base_name = f".{os.sep}src{os.sep}{options.year}{os.sep}"
+            open(f"{base_name}d{options.day}.txt", "w").close()
+            with open(f"{base_name}data{os.sep}d{options.day}.py", "w") as file:
                 file.write('""""""\nfrom ..day import DayBase\n\nexample = """"""\n\n\n'
                            'class Day(DayBase):\n    def do(self):\n        pass\n')
                 file.close()
