@@ -173,6 +173,6 @@ if __name__ == "__main__":
     print("#   WITH PUZZLE INPUT  #")
     with open('2023/d7.txt', 'r') as file:
         input_data: str = file.read()
-        print(f"# c2023d7p1 => {c2023d7p1(input_data)} #")  # 248 603 291 < x < 250 646 924
+        # print(f"# c2023d7p1 => {c2023d7p1(input_data)} #")  # 248 603 291 < x < 250 646 924
     # print(f"# c2023d7p2 => {c2023d7p2(input_data)} #")
     # print("########################")
