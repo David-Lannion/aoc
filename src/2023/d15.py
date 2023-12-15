@@ -88,35 +88,11 @@
     What is the sum of the results?
     (The initialization sequence is one long line; be careful when copy-pasting it.)
 """
-import json
-import math
-import re
-import time
-from PIL import Image
+from ..day import DayBase
 
 example = """rn=1,cm-,qp=3,cm=2,qp-,pc=4,ot=9,ab=5,pc-,pc=6,ot=7"""
 
 
-def c2023d15p1(data=example):
-    return 0
-
-
-def c2023d15p2(data=example):
-    return 0
-
-
-if __name__ == "__main__":
-    print("########################")
-    print("####    TEST ALGO   ####")
-    res = c2023d15p1()
-    ok = "ok" if res == 405 else "ko"
-    print(f"##  c2023d15p1 => {ok} {res}   #")
-    ok = "ok" if c2023d15p2() == 6 else "ko"
-    print(f"##  c2023d15p2 => {ok}    #")
-    print("########################")
-    print("#   WITH PUZZLE INPUT  #")
-    with open('2023/d14.txt', 'r') as file:
-        input_data: str = file.read()
-        print(f"# c2023d15p1 => {c2023d15p1(input_data)} #")  # 13771
-        print(f"# c2023d15p2 => {c2023d15p2(input_data)} #")
-    print("########################")
+class Day(DayBase):
+    def do(self):
+        self.test(405, 405)

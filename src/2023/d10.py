@@ -115,11 +115,10 @@
     How many steps along the loop does it take to get from the starting position
     to the point farthest from the starting position?
 """
-import json
-import math
 import re
-import time
 from PIL import Image
+from ..day import DayBase
+
 
 example = """7-F7-
 .FJ|7

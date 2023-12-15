@@ -12,6 +12,7 @@
     You offer to help.
 """
 import re
+from ..day import DayBase
 
 example = """467..114..
 ...*......

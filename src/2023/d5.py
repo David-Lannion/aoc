@@ -20,6 +20,7 @@
 """
 import re
 import time
+from ..day import DayBase
 
 example = """seeds: 79 14 55 13
 

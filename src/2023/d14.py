@@ -66,11 +66,7 @@
     Tilt the platform so that the rounded rocks all roll north.
     Afterward, what is the total load on the north support beams?
 """
-import json
-import math
-import re
-import time
-from PIL import Image
+from ..day import DayBase
 
 example = """O....#....
 O.OO#....#

@@ -101,11 +101,7 @@
     Expand the universe, then find the length of the shortest path between every pair of galaxies.
     What is the sum of these lengths?
 """
-import json
-import math
-import re
-import time
-from PIL import Image
+from ..day import DayBase
 
 example = """...#......
 .......#..

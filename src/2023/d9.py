@@ -73,10 +73,8 @@
     Analyze your OASIS report and extrapolate the next value for each history.
     What is the sum of these extrapolated values?
 """
-import json
-import math
 import re
-import time
+from ..day import DayBase
 
 example = """0 3 6 9 12 15
 1 3 6 10 15 21

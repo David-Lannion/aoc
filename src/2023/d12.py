@@ -92,11 +92,7 @@
 
     For each row, count all of the different arrangements of operational and broken springs that meet the given criteria. What is the sum of those counts?
 """
-import json
-import math
-import re
-import time
-from PIL import Image
+from ..day import DayBase
 
 example = """???.### 1,1,3
 .??..??...?##. 1,1,3

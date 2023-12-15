@@ -72,6 +72,7 @@
 """
 import math
 import re
+from ..day import DayBase
 
 example = """Time:      7  15   30
 Distance:  9  40  200"""

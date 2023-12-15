@@ -79,9 +79,8 @@
 
     Find the rank of every hand in your set. What are the total winnings?
 """
-import math
 import re
-import time
+from ..day import DayBase
 
 example = """32T3K 765
 T55J5 684
