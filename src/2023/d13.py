@@ -155,6 +155,19 @@ def c2023d13p1(data=example):
     return res
 
 
+class Day(DayBase):
+    def do(self):
+        self.test(4361, 467835, example)
+        self.run(520135, 72514855)
+
+    @staticmethod
+    def part1(data=example):
+        pass
+
+    @staticmethod
+    def part2(data=example):
+        pass
+
 def c2023d13p2(data=example):
     """--- Part Two ---
         You resume walking through the valley of mirrors and - SMACK! - run directly into one.

@@ -66,6 +66,7 @@ seed-to-soil map:
 soil-to-fertilizer map:
 1000 0 1000"""
 
+
 class Almanac:
     """The almanac (your puzzle input) lists all of the seeds that need to be planted.
     It also lists what type of soil to use with each kind of seed, what type of fertilizer
@@ -167,6 +168,20 @@ class Almanac:
 
     def transform_elem(self, elem, road):
         self.next.append(road[4] + elem)
+
+
+class Day(DayBase):
+    def do(self):
+        self.test(4361, 467835, example)
+        self.run(520135, 72514855)
+
+    @staticmethod
+    def part1(data=example):
+        pass
+
+    @staticmethod
+    def part2(data=example):
+        pass
 
 
 def c2023d5p1(data=example):

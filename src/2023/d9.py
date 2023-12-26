@@ -83,6 +83,18 @@ example = """0 3 6 9 12 15
 example2 = "10 13 16 21 30 45"
 
 
+class Day(DayBase):
+    def do(self):
+        self.test(4361, 467835, example)
+        self.run(520135, 72514855)
+
+    @staticmethod
+    def part1(data=example):
+        pass
+
+    @staticmethod
+    def part2(data=example):
+        pass
 def next_level(s):
     return [s[i + 1] - s[i] for i in range(len(s) - 1)]
 

@@ -94,6 +94,18 @@ def possibility_for_run(duration, distance, opti=True):
     return res
 
 
+class Day(DayBase):
+    def do(self):
+        self.test(4361, 467835, example)
+        self.run(520135, 72514855)
+
+    @staticmethod
+    def part1(data=example):
+        pass
+
+    @staticmethod
+    def part2(data=example):
+        pass
 def c2023d6p1(data=example):
     lines = re.split(r"\n+", data)
     times = [int(e) for e in re.split(r" +", lines[0])[1:]]  # times allowed by run

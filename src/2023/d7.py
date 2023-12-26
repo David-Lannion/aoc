@@ -89,6 +89,18 @@ KTJJT 220
 QQQJA 483"""
 
 
+class Day(DayBase):
+    def do(self):
+        self.test(4361, 467835, example)
+        self.run(520135, 72514855)
+
+    @staticmethod
+    def part1(data=example):
+        pass
+
+    @staticmethod
+    def part2(data=example):
+        pass
 def c2023d7p1(data=example):
     # print(data)
     trans_table = data.maketrans("AKQJT", "FEDCB")

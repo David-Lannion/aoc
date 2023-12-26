@@ -66,6 +66,18 @@ example2 = """LR
 XXX = (XXX, XXX)"""
 
 
+class Day(DayBase):
+    def do(self):
+        self.test(4361, 467835, example)
+        self.run(520135, 72514855)
+
+    @staticmethod
+    def part1(data=example):
+        pass
+
+    @staticmethod
+    def part2(data=example):
+        pass
 def is_end(s):
     # print("Is end :", s)
     for i in s:

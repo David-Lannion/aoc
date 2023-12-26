@@ -80,26 +80,15 @@ O.#..O.#.#
 #OO..#...."""
 
 
-def c2023d14p1(data=example):
-    print("")
+class Day(DayBase):
+    def do(self):
+        self.test(4361, 467835, example)
+        self.run(520135, 72514855)
 
+    @staticmethod
+    def part1(data=example):
+        pass
 
-def c2023d14p2(data=example):
-    pass
-
-
-if __name__ == "__main__":
-    print("########################")
-    print("####    TEST ALGO   ####")
-    res = c2023d14p1()
-    ok = "ok" if res == 405 else "ko"
-    print(f"##  c2023d14p1 => {ok} {res}   #")
-    ok = "ok" if c2023d14p2() == 6 else "ko"
-    print(f"##  c2023d14p2 => {ok}    #")
-    print("########################")
-    print("#   WITH PUZZLE INPUT  #")
-    with open('2023/d14.txt', 'r') as file:
-        input_data: str = file.read()
-        print(f"# c2023d14p1 => {c2023d14p1(input_data)} #")  # 13771
-        print(f"# c2023d14p2 => {c2023d14p2(input_data)} #")
-    print("########################")
+    @staticmethod
+    def part2(data=example):
+        pass

@@ -93,6 +93,16 @@ from ..day import DayBase
 example = """rn=1,cm-,qp=3,cm=2,qp-,pc=4,ot=9,ab=5,pc-,pc=6,ot=7"""
 
 
+
 class Day(DayBase):
     def do(self):
-        self.test(405, 405)
+        self.test(405, 405, example)
+        self.run(520135, 72514855)
+
+    @staticmethod
+    def part1(data=example):
+        pass
+
+    @staticmethod
+    def part2(data=example):
+        pass

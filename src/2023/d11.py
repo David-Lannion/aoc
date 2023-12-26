@@ -139,6 +139,18 @@ class Universe:
         return abs(g_1[0] - g_2[0]) + abs(g_1[1] - g_2[1])
 
 
+class Day(DayBase):
+    def do(self):
+        self.test(4361, 467835, example)
+        self.run(520135, 72514855)
+
+    @staticmethod
+    def part1(data=example):
+        pass
+
+    @staticmethod
+    def part2(data=example):
+        pass
 def c2023d11p1(data=example):
     uni = Universe(data, 2)
     res = 0

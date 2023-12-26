@@ -45,6 +45,7 @@ class Card:
     """The Elf leads you over to the pile of colorful cards.
     There, you discover dozens of scratchcards, all with their opaque covering already scratched off.
     """
+
     def __init__(self, line, nb=1):
         # Picking one up, it looks like each card has two lists of numbers separated by a vertical bar (|):
         card = re.split(r"[:|]", line)
@@ -55,6 +56,20 @@ class Card:
         card_mine = set([int(i) for i in re.split(r" +", card[2].strip())])
         self.depth = len(card_win.intersection(card_mine))
         self.pts = 2 ** (self.depth - 1) if self.depth > 0 else 0
+
+
+class Day(DayBase):
+    def do(self):
+        self.test(4361, 467835, example)
+        self.run(520135, 72514855)
+
+    @staticmethod
+    def part1(data=example):
+        pass
+
+    @staticmethod
+    def part2(data=example):
+        pass
 
 
 def c2023d4p1(data=example):

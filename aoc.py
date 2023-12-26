@@ -18,8 +18,25 @@ if __name__ == "__main__":
         create = input() == 'y'
         if create:
             base_name = f".{os.sep}src{os.sep}{options.year}{os.sep}"
-            open(f"{base_name}d{options.day}.txt", "w").close()
-            with open(f"{base_name}data{os.sep}d{options.day}.py", "w") as file:
-                file.write('""""""\nfrom ..day import DayBase\n\nexample = """"""\n\n\n'
-                           'class Day(DayBase):\n    def do(self):\n        pass\n')
+            open(f"{base_name}data{os.sep}d{options.day}.txt", "w").close()
+            with open(f"{base_name}d{options.day}.py", "w") as file:
+                file.write('''""""""
+from ..day import DayBase
+
+example = """"""
+
+
+class Day(DayBase):
+    def do(self):
+        self.test(4361, 467835, example)
+        self.run(520135, 72514855)
+
+    @staticmethod
+    def part1(data=example):
+        pass
+
+    @staticmethod
+    def part2(data=example):
+        pass
+        ''')
                 file.close()
