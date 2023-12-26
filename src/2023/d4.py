@@ -60,117 +60,93 @@ class Card:
 
 class Day(DayBase):
     def do(self):
-        self.test(4361, 467835, example)
-        self.run(520135, 72514855)
+        self.test(13, 30, example)
+        self.run(15205, 6189740)
 
     @staticmethod
     def part1(data=example):
-        pass
+        """Part 1
+
+            You organize the information into a table (your puzzle input).
+
+            In the above example, card 1 has five winning numbers (41, 48, 83, 86, and 17) and
+            eight numbers you have (83, 86, 6, 31, 17, 9, 48, and 53).
+            Of the numbers you have, four of them (48, 83, 17, and 86) are winning numbers!
+            That means card 1 is worth 8 points
+            (1 for the first match, then doubled three times for each of the three matches after the first).
+
+            Card 2 has two winning numbers (32 and 61), so it is worth 2 points.
+            Card 3 has two winning numbers (1 and 21), so it is worth 2 points.
+            Card 4 has one winning number (84), so it is worth 1 point.
+            Card 5 has no winning numbers, so it is worth no points.
+            Card 6 has no winning numbers, so it is worth no points.
+            So, in this example, the Elf's pile of scratchcards is worth 13 points.
+
+            Take a seat in the large pile of colorful cards. How many points are they worth in total?
+        """
+        lines = re.split(r"\n+", data)
+        sum = 0
+        for line in lines:
+            card = Card(line)
+            sum += card.pts
+        # print("Total ", sum)
+        return sum
 
     @staticmethod
     def part2(data=example):
-        pass
+        """--- Part Two ---
 
+            Just as you're about to report your findings to the Elf, one of you realizes that
+            the rules have actually been printed on the back of every card this whole time.
 
-def c2023d4p1(data=example):
-    """Part 1
+            There's no such thing as "points".
+            Instead, scratchcards only cause you to win more scratchcards equal to the number of winning numbers you have.
 
-        You organize the information into a table (your puzzle input).
+            Specifically, you win copies of the scratchcards below the winning card equal to the number of matches.
+            So, if card 10 were to have 5 matching numbers, you would win one copy each of cards 11, 12, 13, 14, and 15.
 
-        In the above example, card 1 has five winning numbers (41, 48, 83, 86, and 17) and
-        eight numbers you have (83, 86, 6, 31, 17, 9, 48, and 53).
-        Of the numbers you have, four of them (48, 83, 17, and 86) are winning numbers!
-        That means card 1 is worth 8 points
-        (1 for the first match, then doubled three times for each of the three matches after the first).
+            Copies of scratchcards are scored like normal scratchcards and
+            have the same card number as the card they copied.
+            So, if you win a copy of card 10 and it has 5 matching numbers,
+            it would then win a copy of the same cards that the original card 10 won: cards 11, 12, 13, 14, and 15.
+            This process repeats until none of the copies cause you to win any more cards.
+            (Cards will never make you copy a card past the end of the table.)
 
-        Card 2 has two winning numbers (32 and 61), so it is worth 2 points.
-        Card 3 has two winning numbers (1 and 21), so it is worth 2 points.
-        Card 4 has one winning number (84), so it is worth 1 point.
-        Card 5 has no winning numbers, so it is worth no points.
-        Card 6 has no winning numbers, so it is worth no points.
-        So, in this example, the Elf's pile of scratchcards is worth 13 points.
+            This time, the above example goes differently:
 
-        Take a seat in the large pile of colorful cards. How many points are they worth in total?
-    """
-    lines = re.split(r"\n+", data)
-    sum = 0
-    for line in lines:
-        card = Card(line)
-        sum += card.pts
-    # print("Total ", sum)
-    return sum
+            Card 1 has four matching numbers, so you win one copy each of the next four cards: cards 2, 3, 4, and 5.
+            Your original card 2 has two matching numbers, so you win one copy each of cards 3 and 4.
+            Your copy of card 2 also wins one copy each of cards 3 and 4.
+            Your four instances of card 3 (one original and three copies) have two matching numbers,
+            so you win four copies each of cards 4 and 5.
+            Your eight instances of card 4 (one original and seven copies) have one matching number,
+            so you win eight copies of card 5.
+            Your fourteen instances of card 5 (one original and thirteen copies)
+            have no matching numbers and win no more cards.
+            Your one instance of card 6 (one original) has no matching numbers and wins no more cards.
+            Once all of the originals and copies have been processed,
+            you end up with 1 instance of card 1,
+            2 instances of card 2,
+            4 instances of card 3,
+            8 instances of card 4,
+            14 instances of card 5, and
+            1 instance of card 6.
+            In total, this example pile of scratchcards causes you to ultimately have 30 scratchcards!
 
-
-def c2023d4p2(data=example):
-    """--- Part Two ---
-
-        Just as you're about to report your findings to the Elf, one of you realizes that
-        the rules have actually been printed on the back of every card this whole time.
-
-        There's no such thing as "points".
-        Instead, scratchcards only cause you to win more scratchcards equal to the number of winning numbers you have.
-
-        Specifically, you win copies of the scratchcards below the winning card equal to the number of matches.
-        So, if card 10 were to have 5 matching numbers, you would win one copy each of cards 11, 12, 13, 14, and 15.
-
-        Copies of scratchcards are scored like normal scratchcards and
-        have the same card number as the card they copied.
-        So, if you win a copy of card 10 and it has 5 matching numbers,
-        it would then win a copy of the same cards that the original card 10 won: cards 11, 12, 13, 14, and 15.
-        This process repeats until none of the copies cause you to win any more cards.
-        (Cards will never make you copy a card past the end of the table.)
-
-        This time, the above example goes differently:
-
-        Card 1 has four matching numbers, so you win one copy each of the next four cards: cards 2, 3, 4, and 5.
-        Your original card 2 has two matching numbers, so you win one copy each of cards 3 and 4.
-        Your copy of card 2 also wins one copy each of cards 3 and 4.
-        Your four instances of card 3 (one original and three copies) have two matching numbers,
-        so you win four copies each of cards 4 and 5.
-        Your eight instances of card 4 (one original and seven copies) have one matching number,
-        so you win eight copies of card 5.
-        Your fourteen instances of card 5 (one original and thirteen copies)
-        have no matching numbers and win no more cards.
-        Your one instance of card 6 (one original) has no matching numbers and wins no more cards.
-        Once all of the originals and copies have been processed,
-        you end up with 1 instance of card 1,
-        2 instances of card 2,
-        4 instances of card 3,
-        8 instances of card 4,
-        14 instances of card 5, and
-        1 instance of card 6.
-        In total, this example pile of scratchcards causes you to ultimately have 30 scratchcards!
-
-        Process all of the original and copied scratchcards until no more scratchcards are won.
-        Including the original set of scratchcards, how many total scratchcards do you end up with?
-    """
-    lines = re.split(r"\n+", data)
-    cards = []
-    card_nb = [1] * len(lines)
-    index = 0
-    for line in lines:
-        card = Card(line, card_nb[index])
-        index += 1
-        if card.depth > 0:
-            for depth in range(card.depth):
-                card_nb[index + depth] += card.nb
-        cards.append(card)
-    # print(card_nb)
-    # print("Total ", sum(card_nb))
-    return sum(card_nb)
-
-
-if __name__ == "__main__":
-    print("########################")
-    print("####    TEST ALGO   ####")
-    ok = "ok" if c2023d4p1() == 13 else "ko"
-    print(f"##  c2023d4p1 => {ok}    #")
-    ok = "ok" if c2023d4p2() == 30 else "ko"
-    print(f"##  c2023d4p2 => {ok}    #")
-    print("########################")
-    print("#   WITH PUZZLE INPUT  #")
-    with open('2023/d4.txt', 'r') as file:
-        input_data: str = file.read()
-        print(f"# c2023d4p1 => {c2023d4p1(input_data)}   #")
-        print(f"# c2023d4p2 => {c2023d4p2(input_data)} #")
-    print("########################")
+            Process all of the original and copied scratchcards until no more scratchcards are won.
+            Including the original set of scratchcards, how many total scratchcards do you end up with?
+        """
+        lines = re.split(r"\n+", data)
+        cards = []
+        card_nb = [1] * len(lines)
+        index = 0
+        for line in lines:
+            card = Card(line, card_nb[index])
+            index += 1
+            if card.depth > 0:
+                for depth in range(card.depth):
+                    card_nb[index + depth] += card.nb
+            cards.append(card)
+        # print(card_nb)
+        # print("Total ", sum(card_nb))
+        return sum(card_nb)

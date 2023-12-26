@@ -91,99 +91,76 @@ QQQJA 483"""
 
 class Day(DayBase):
     def do(self):
-        self.test(4361, 467835, example)
-        self.run(520135, 72514855)
+        self.test(6440, None, example)
+        self.run(None, None)
 
     @staticmethod
     def part1(data=example):
-        pass
+        trans_table = data.maketrans("AKQJT", "FEDCB")
+        lines = re.split(r"\n+", data.translate(trans_table))
+        # print(lines)
+        res = 0
+        levels_names = ["five", "four", "full", "three", "twtw", "pair", "high"]
+        levels = {
+            "five": [],
+            "four": [],
+            "full": [],
+            "three": [],
+            "twtw": [],
+            "pair": [],
+            "high": [],
+        }
+        for line in lines:
+            cards, bids = line.split(" ")
+            bids = int(bids)
+            lin = [cards, bids]
+            s_cards = "".join(sorted(cards, reverse=True))
+            # print("--- LINE ---")
+            # print(s_cards.count(s_cards[0]))
+            match s_cards.count(s_cards[0]):
+                case 5:  # [GGGGG]
+                    levels["five"].append(lin)
+                case 4:  # [GGGGH]
+                    levels["four"].append(lin)
+                case 3:
+                    # case full, case three : [GGGHH or GGGHI]
+                    levels["full" if s_cards.count(s_cards[3]) == 2 else "three"].append(lin)
+                case 2:
+                    match s_cards.count(s_cards[3]):
+                        # not taking third card but fourth in order to optimize as s_cards is ordered
+                        case 3:  # case full [GGHHH]
+                            levels["full"].append(lin)
+                        case 2:  # case double paire : [GGHHI ou GGHII]
+                            levels["twtw"].append(lin)
+                        case 1:  # case high, tested : [GG.H.]
+                            levels["high"].append(lin)
+                    # case paire, case full,
+                case 1:  # [G....]
+                    match s_cards.count(s_cards[2]):
+                        case 4:  # [GHHHH]
+                            levels["four"].append(lin)
+                        case 3:  # [GHHHI ou GHIII]
+                            levels["three"].append(lin)
+                        case 2:  # [GHH.. ou G.HH.]
+                            levels["pair" if s_cards.count(s_cards[4]) == 1 else "twtw"].append(lin)
+                        case 1:  # [G.H..]
+                            levels["high" if s_cards.count(s_cards[4]) == 1 else "pair"].append(lin)
+
+        res = 0
+        rank = 0
+        nb_lvl = len(levels_names) - 1
+        for lvl in range(nb_lvl + 1):
+            # print(levels_names[nb_lvl - lvl])
+            cur_lvl = sorted(levels[levels_names[nb_lvl - lvl]], reverse=False)
+            print(cur_lvl)
+            for elem in cur_lvl:
+                # print(f"Hand {elem[0]} Rank {rank} : {elem[1]}")
+                rank += 1
+                res += rank * elem[1]
+        print(res)
+        # print(levels)
+        return res
 
     @staticmethod
     def part2(data=example):
-        pass
-def c2023d7p1(data=example):
-    # print(data)
-    trans_table = data.maketrans("AKQJT", "FEDCB")
-    lines = re.split(r"\n+", data.translate(trans_table))
-    # print(lines)
-    res = 0
-    levels_names = ["five", "four", "full", "three", "twtw", "pair", "high"]
-    levels = {
-        "five": [],
-        "four": [],
-        "full": [],
-        "three": [],
-        "twtw": [],
-        "pair": [],
-        "high": [],
-    }
-    for line in lines:
-        cards, bids = line.split(" ")
-        bids = int(bids)
-        lin = [cards, bids]
-        s_cards = "".join(sorted(cards, reverse=True))
-        # print("--- LINE ---")
-        # print(s_cards.count(s_cards[0]))
-        match s_cards.count(s_cards[0]):
-            case 5:  # [GGGGG]
-                levels["five"].append(lin)
-            case 4:  # [GGGGH]
-                levels["four"].append(lin)
-            case 3:
-                # case full, case three : [GGGHH or GGGHI]
-                levels["full" if s_cards.count(s_cards[3]) == 2 else "three"].append(lin)
-            case 2:
-                match s_cards.count(s_cards[3]):
-                    # not taking third card but fourth in order to optimize as s_cards is ordered
-                    case 3:  # case full [GGHHH]
-                        levels["full"].append(lin)
-                    case 2:  # case double paire : [GGHHI ou GGHII]
-                        levels["twtw"].append(lin)
-                    case 1:  # case high, tested : [GG.H.]
-                        levels["high"].append(lin)
-                # case paire, case full,
-            case 1:  # [G....]
-                match s_cards.count(s_cards[2]):
-                    case 4:  # [GHHHH]
-                        levels["four"].append(lin)
-                    case 3:  # [GHHHI ou GHIII]
-                        levels["three"].append(lin)
-                    case 2:  # [GHH.. ou G.HH.]
-                        levels["pair" if s_cards.count(s_cards[4]) == 1 else "twtw"].append(lin)
-                    case 1:  # [G.H..]
-                        levels["high" if s_cards.count(s_cards[4]) == 1 else "pair"].append(lin)
-
-    res = 0
-    rank = 0
-    nb_lvl = len(levels_names) - 1
-    for lvl in range(nb_lvl + 1):
-        # print(levels_names[nb_lvl - lvl])
-        cur_lvl = sorted(levels[levels_names[nb_lvl - lvl]], reverse=False)
-        print(cur_lvl)
-        for elem in cur_lvl:
-            # print(f"Hand {elem[0]} Rank {rank} : {elem[1]}")
-            rank += 1
-            res += rank * elem[1]
-    print(res)
-    # print(levels)
-    return res
-
-
-def c2023d7p2(data=example):
-    pass
-
-
-if __name__ == "__main__":
-    print("########################")
-    print("####    TEST ALGO   ####")
-    ok = "ok" if c2023d7p1() == 6440 else "ko"
-    print(f"##  c2023d7p1 => {ok}    #")
-    ok = "ok" if c2023d7p2() == 71503 else "ko"
-    print(f"##  c2023d7p2 => {ok}    #")
-    print("########################")
-    print("#   WITH PUZZLE INPUT  #")
-    with open('2023/d7.txt', 'r') as file:
-        input_data: str = file.read()
-        # print(f"# c2023d7p1 => {c2023d7p1(input_data)} #")  # 248 603 291 < x < 250 646 924
-    # print(f"# c2023d7p2 => {c2023d7p2(input_data)} #")
-    # print("########################")
+        return None

@@ -13,6 +13,7 @@ if __name__ == "__main__":
         day = getattr(__import__(f"src.{options.year}.d{options.day}", fromlist=["Day"]), "Day")
         day(options.year, options.day).do()
     except ModuleNotFoundError as e:
+        print(e)
         print(f"Challenge of day {options.day} year {options.year} not found.")
         print("Create ? y/n")
         create = input() == 'y'
@@ -28,8 +29,8 @@ example = """"""
 
 class Day(DayBase):
     def do(self):
-        self.test(4361, 467835, example)
-        self.run(520135, 72514855)
+        self.test(None, None, example)
+        self.run(None, None)
 
     @staticmethod
     def part1(data=example):

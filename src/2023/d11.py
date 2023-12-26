@@ -140,71 +140,50 @@ class Universe:
 
 
 class Day(DayBase):
+    p2factor = 1
+
     def do(self):
-        self.test(4361, 467835, example)
-        self.run(520135, 72514855)
+        Day.p2factor = 10
+        self.test(374, 1030, example)
+        Day.p2factor = 100
+        self.write(2, example, 8410)
+        Day.p2factor = 1_000_000
+        self.run(9_965_032, 550_358_864_332)
 
     @staticmethod
     def part1(data=example):
-        pass
+        uni = Universe(data, 2)
+        res = 0
+        count = 0
+        for galaxy in uni.expanded_galaxies:
+            count += 1
+            for paired in uni.expanded_galaxies[count:]:
+                res += uni.distance(galaxy, paired)
+        return res
 
     @staticmethod
     def part2(data=example):
-        pass
-def c2023d11p1(data=example):
-    uni = Universe(data, 2)
-    res = 0
-    count = 0
-    for galaxy in uni.expanded_galaxies:
-        count += 1
-        for paired in uni.expanded_galaxies[count:]:
-            res += uni.distance(galaxy, paired)
-    return res
+        """--- Part Two ---
+            The galaxies are much older (and thus much farther apart) than the researcher initially estimated.
 
+            Now, instead of the expansion you did before, make each empty row or column one million times larger.
+            That is, each empty row should be replaced with 1000000 empty rows,
+            and each empty column should be replaced with 1000000 empty columns.
 
-def c2023d11p2(data=example, size=1):
-    """--- Part Two ---
-        The galaxies are much older (and thus much farther apart) than the researcher initially estimated.
+            (In the example above, if each empty row or column were merely 10 times larger,
+            the sum of the shortest paths between every pair of galaxies would be 1030.
+            If each empty row or column were merely 100 times larger,
+            the sum of the shortest paths between every pair of galaxies would be 8410.
+            However, your universe will need to expand far beyond these values.)
 
-        Now, instead of the expansion you did before, make each empty row or column one million times larger.
-        That is, each empty row should be replaced with 1000000 empty rows,
-        and each empty column should be replaced with 1000000 empty columns.
-
-        (In the example above, if each empty row or column were merely 10 times larger,
-        the sum of the shortest paths between every pair of galaxies would be 1030.
-        If each empty row or column were merely 100 times larger,
-        the sum of the shortest paths between every pair of galaxies would be 8410.
-        However, your universe will need to expand far beyond these values.)
-
-        Starting with the same initial image, expand the universe according to these new rules,
-        then find the length of the shortest path between every pair of galaxies. What is the sum of these lengths?
-    """
-    uni = Universe(data, size)
-    res = 0
-    count = 0
-    for galaxy in uni.expanded_galaxies:
-        count += 1
-        for paired in uni.expanded_galaxies[count:]:
-            res += uni.distance(galaxy, paired)
-    return res
-
-
-if __name__ == "__main__":
-    print("########################")
-    print("####    TEST ALGO   ####")
-    res = c2023d11p1()
-    ok = "ok" if res == 374 else "ko"
-    print(f"##  c2023d11p1 => {ok} {res}   #")
-    res = c2023d11p2(example, 10)
-    ok = "ok" if res == 1030 else "ko"
-    print(f"##  c2023d11p2 => {ok} {res}  #")
-    res = c2023d11p2(example, 100)
-    ok = "ok" if res == 8410 else "ko"
-    print(f"##  c2023d11p2 => {ok} {res}   #")
-    print("########################")
-    print("#   WITH PUZZLE INPUT  #")
-    with open('2023/d11.txt', 'r') as file:
-        input_data: str = file.read()
-        print(f"# c2023d11p1 => {c2023d11p1(input_data)} #")  # 13771
-        print(f"# c2023d11p2 => {c2023d11p2(input_data, 1000000)} #")
-    # print("########################")
+            Starting with the same initial image, expand the universe according to these new rules,
+            then find the length of the shortest path between every pair of galaxies. What is the sum of these lengths?
+        """
+        uni = Universe(data, Day.p2factor)
+        res = 0
+        count = 0
+        for galaxy in uni.expanded_galaxies:
+            count += 1
+            for paired in uni.expanded_galaxies[count:]:
+                res += uni.distance(galaxy, paired)
+        return res

@@ -78,68 +78,46 @@ example = """Time:      7  15   30
 Distance:  9  40  200"""
 
 
-def possibility_for_run(duration, distance, opti=True):
-    if opti:  # not working
-        posi = (duration - math.sqrt(duration * duration - 4 * distance))
-        # print(duration - 2 * math.floor(2 * posi) + 1)
-        res = duration - 2 * math.floor(posi) + 1
-        print(f"Run {duration}ms of {distance}mm, found {res} o {posi}")
-        print(f"  Hold {posi} make {posi * (duration - posi)}mm")
-    else:
-        res = 0
-        for i in range(duration):
-            if i * (duration - i) > distance:
-                res += 1
-        print(f"Run {duration}ms of {distance}mm, found {res} i")
-    return res
-
-
 class Day(DayBase):
     def do(self):
-        self.test(4361, 467835, example)
-        self.run(520135, 72514855)
+        self.test(288, 71_503, example)
+        self.run(481_338, 28_545_089)
+
+    @staticmethod
+    def possibility_for_run(duration, distance, opti=True):
+        if opti:  # not working
+            posi = (duration - math.sqrt(duration * duration - 4 * distance))
+            # print(duration - 2 * math.floor(2 * posi) + 1)
+            res = duration - 2 * math.floor(posi) + 1
+            # print(f"Run {duration}ms of {distance}mm, found {res} o {posi}")
+            # print(f"  Hold {posi} make {posi * (duration - posi)}mm")
+        else:
+            res = 0
+            for i in range(duration):
+                if i * (duration - i) > distance:
+                    res += 1
+            # print(f"Run {duration}ms of {distance}mm, found {res} i")
+        return res
 
     @staticmethod
     def part1(data=example):
-        pass
+        lines = re.split(r"\n+", data)
+        times = [int(e) for e in re.split(r" +", lines[0])[1:]]  # times allowed by run
+        dist_records = [int(e) for e in re.split(r" +", lines[1])[1:]]  # record for given run
+        res = 1
+        res2 = 1
+        for run in range(len(times)):
+            time_run = times[run]
+            dist_run = dist_records[run]
+            res *= Day.possibility_for_run(time_run, dist_run)
+            res2 *= Day.possibility_for_run(time_run, dist_run, False)
+        # print(f"RES : {res}; RES2 : {res2}")
+        return res if res > 0 else res2
 
     @staticmethod
     def part2(data=example):
-        pass
-def c2023d6p1(data=example):
-    lines = re.split(r"\n+", data)
-    times = [int(e) for e in re.split(r" +", lines[0])[1:]]  # times allowed by run
-    dist_records = [int(e) for e in re.split(r" +", lines[1])[1:]]  # record for given run
-    res = 1
-    res2 = 1
-    for run in range(len(times)):
-        time_run = times[run]
-        dist_run = dist_records[run]
-        res *= possibility_for_run(time_run, dist_run)
-        res2 *= possibility_for_run(time_run, dist_run, False)
-    print(f"RES : {res}; RES2 : {res2}")
-    return res
-
-
-def c2023d6p2(data=example):
-    lines = re.split(r"\n+", data)
-    time_run = int(re.split(r":", lines[0].replace(" ", ''))[1])  # times allowed by run
-    dist_run = int(re.split(r":", lines[1].replace(" ", ''))[1])  # record for given run
-    possibility_for_run(time_run, dist_run)
-    return possibility_for_run(time_run, dist_run, False)
-
-
-if __name__ == "__main__":
-    print("########################")
-    print("####    TEST ALGO   ####")
-    ok = "ok" if c2023d6p1() == 288 else "ko"
-    print(f"##  c2023d6p1 => {ok}    #")
-    ok = "ok" if c2023d6p2() == 71503 else "ko"
-    print(f"##  c2023d6p2 => {ok}    #")
-    print("########################")
-    print("#   WITH PUZZLE INPUT  #")
-    with open('2023/d6.txt', 'r') as file:
-        input_data: str = file.read()
-        print(f"# c2023d6p1 => {c2023d6p1(input_data)} #")  # 71503
-        print(f"# c2023d6p2 => {c2023d6p2(input_data)} #")  # 28545089
-    print("########################")
+        lines = re.split(r"\n+", data)
+        time_run = int(re.split(r":", lines[0].replace(" ", ''))[1])  # times allowed by run
+        dist_run = int(re.split(r":", lines[1].replace(" ", ''))[1])  # record for given run
+        Day.possibility_for_run(time_run, dist_run)
+        return Day.possibility_for_run(time_run, dist_run, False)

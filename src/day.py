@@ -35,8 +35,9 @@ class DayBase:
 
     def write(self, part, data, expectation):
         response = self.part1(data) if part == 1 else self.part2(data)
-        ok = " ok" if (expectation is not None and response == expectation) else f" ko, expected {expectation} got"
-        print(f"# c{self.year}d{self.day}p{part} =>{ok} {response} #")
+        ok = "ok" if (expectation is not None and response == expectation) else f"ko, expected {expectation} got"
+        res_thousand = '{:,}'.format(response).replace(',', '_') if response is not None else "None"
+        print(f"# c{self.year}d{self.day}p{part} => {ok} {res_thousand} #")
 
     def do(self):
         print(f"Challenge of day {self.day} year {self.year} not ready")

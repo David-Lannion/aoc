@@ -147,105 +147,83 @@ class Mirror:
         # print(f"Horizontal : {self.horizontal}")
 
 
-def c2023d13p1(data=example):
-    mirrors = re.split("\n\n+", data)
-    res = 0
-    for m in mirrors:
-        res += Mirror(m).value
-    return res
 
 
 class Day(DayBase):
     def do(self):
-        self.test(4361, 467835, example)
-        self.run(520135, 72514855)
+        self.test(None, None, example)
+        self.run(None, None)
 
     @staticmethod
     def part1(data=example):
-        pass
+        mirrors = re.split("\n\n+", data)
+        res = 0
+        for m in mirrors:
+            res += Mirror(m).value
+        return res
 
     @staticmethod
     def part2(data=example):
-        pass
+        """--- Part Two ---
+            You resume walking through the valley of mirrors and - SMACK! - run directly into one.
+            Hopefully nobody was watching, because that must have been pretty embarrassing.
 
-def c2023d13p2(data=example):
-    """--- Part Two ---
-        You resume walking through the valley of mirrors and - SMACK! - run directly into one.
-        Hopefully nobody was watching, because that must have been pretty embarrassing.
+            Upon closer inspection, you discover that every mirror has exactly one smudge:
+            exactly one . or # should be the opposite type.
 
-        Upon closer inspection, you discover that every mirror has exactly one smudge:
-        exactly one . or # should be the opposite type.
+            In each pattern, you'll need to locate and fix the smudge that causes a different reflection line to be valid.
+            (The old reflection line won't necessarily continue being valid after the smudge is fixed.)
 
-        In each pattern, you'll need to locate and fix the smudge that causes a different reflection line to be valid.
-        (The old reflection line won't necessarily continue being valid after the smudge is fixed.)
+            Here's the above example again:
 
-        Here's the above example again:
+            #.##..##.
+            ..#.##.#.
+            ##......#
+            ##......#
+            ..#.##.#.
+            ..##..##.
+            #.#.##.#.
 
-        #.##..##.
-        ..#.##.#.
-        ##......#
-        ##......#
-        ..#.##.#.
-        ..##..##.
-        #.#.##.#.
+            #...##..#
+            #....#..#
+            ..##..###
+            #####.##.
+            #####.##.
+            ..##..###
+            #....#..#
+            The first pattern's smudge is in the top-left corner.
+            If the top-left # were instead ., it would have a different, horizontal line of reflection:
 
-        #...##..#
-        #....#..#
-        ..##..###
-        #####.##.
-        #####.##.
-        ..##..###
-        #....#..#
-        The first pattern's smudge is in the top-left corner.
-        If the top-left # were instead ., it would have a different, horizontal line of reflection:
+            1 ..##..##. 1
+            2 ..#.##.#. 2
+            3v##......#v3
+            4^##......#^4
+            5 ..#.##.#. 5
+            6 ..##..##. 6
+            7 #.#.##.#. 7
+            With the smudge in the top-left corner repaired, a new horizontal line of reflection
+            between rows 3 and 4 now exists.
+            Row 7 has no corresponding reflected row and can be ignored, but every other row matches exactly:
+            row 1 matches row 6, row 2 matches row 5, and row 3 matches row 4.
 
-        1 ..##..##. 1
-        2 ..#.##.#. 2
-        3v##......#v3
-        4^##......#^4
-        5 ..#.##.#. 5
-        6 ..##..##. 6
-        7 #.#.##.#. 7
-        With the smudge in the top-left corner repaired, a new horizontal line of reflection
-        between rows 3 and 4 now exists.
-        Row 7 has no corresponding reflected row and can be ignored, but every other row matches exactly:
-        row 1 matches row 6, row 2 matches row 5, and row 3 matches row 4.
+            In the second pattern, the smudge can be fixed by changing the fifth symbol on row 2 from . to #:
 
-        In the second pattern, the smudge can be fixed by changing the fifth symbol on row 2 from . to #:
+            1v#...##..#v1
+            2^#...##..#^2
+            3 ..##..### 3
+            4 #####.##. 4
+            5 #####.##. 5
+            6 ..##..### 6
+            7 #....#..# 7
+            Now, the pattern has a different horizontal line of reflection between rows 1 and 2.
 
-        1v#...##..#v1
-        2^#...##..#^2
-        3 ..##..### 3
-        4 #####.##. 4
-        5 #####.##. 5
-        6 ..##..### 6
-        7 #....#..# 7
-        Now, the pattern has a different horizontal line of reflection between rows 1 and 2.
+            Summarize your notes as before, but instead use the new different reflection lines.
+            In this example, the first pattern's new horizontal line has 3 rows above it and
+            the second pattern's new horizontal line has 1 row above it, summarizing to the value 400.
 
-        Summarize your notes as before, but instead use the new different reflection lines.
-        In this example, the first pattern's new horizontal line has 3 rows above it and
-        the second pattern's new horizontal line has 1 row above it, summarizing to the value 400.
-
-        In each pattern, fix the smudge and find the different line of reflection.
-        What number do you get after summarizing the new reflection line in each pattern in your notes?
-    :param data:
-    :return:
-    """
-    pass
-
-
-if __name__ == "__main__":
-    print("########################")
-    print("####    TEST ALGO   ####")
-    res = c2023d13p1()
-    ok = "ok" if res == 405 else "ko"
-    print(f"##  c2023d13p1 => {ok} {res}   #")
-    ok = "ok" if c2023d13p2() == 6 else "ko"
-    print(f"##  c2023d13p2 => {ok}    #")
-    print("########################")
-    print("#   WITH PUZZLE INPUT  #")
-    with open('2023/d13.txt', 'r') as file:
-        input_data: str = file.read()
-        print(f"# c2023d13p1 => {c2023d13p1(input_data)} #")  # 13771
-        print(f"# c2023d13p2 => {c2023d13p2(input_data)} #")
-    print("########################")
+            In each pattern, fix the smudge and find the different line of reflection.
+            What number do you get after summarizing the new reflection line in each pattern in your notes?
+        :param data:
+        :return:
+        """
+        return None

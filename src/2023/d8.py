@@ -68,138 +68,116 @@ XXX = (XXX, XXX)"""
 
 class Day(DayBase):
     def do(self):
-        self.test(4361, 467835, example)
-        self.run(520135, 72514855)
+        self.test(2, 6, example)
+        self.run(13_771, None)
 
     @staticmethod
     def part1(data=example):
-        pass
+        lines = re.split(r"\n+", data)
+        map_data, positions = Day.make_map(lines)
+        # print(json.dumps(map_data, indent=1))
+        current_position = "AAA"
+        directions = lines[0]
+        dir_len = len(lines[0])
+        step = 0
+        while current_position != "ZZZ":
+            current_position = map_data[current_position][directions[step % dir_len]]
+            step += 1
+        return step
 
     @staticmethod
     def part2(data=example):
-        pass
-def is_end(s):
-    # print("Is end :", s)
-    for i in s:
-        if i[2] != "Z":
-            return False
-    return True
+        """--- Part Two ---
+            The sandstorm is upon you and you aren't any closer to escaping the wasteland.
+            You had the camel follow the instructions, but you've barely left your starting position.
+            It's going to take significantly more steps to escape!
 
+            What if the map isn't for people - what if the map is for ghosts?
+            Are ghosts even bound by the laws of spacetime? Only one way to find out.
 
-def make_map(lines):
-    map_data = {}
-    positions = []
-    for i in range(len(lines) - 1):
-        cross = lines[i + 1]
-        map_data[cross[0:3]] = {
-            "L": cross[7:10],
-            "R": cross[12:15]
-        }
-        if cross[2] == "A":
-            positions.append(cross[0:3])
-    # with open('2023/d8.dot', 'w') as file:
-    #     file.write("digraph day8 {\n")
-    #     for m in map_data:
-    #         file.write(f'  "{m}" -> "{map_data[m]["L"]}" \n')
-    #         file.write(f'  "{m}" -> "{map_data[m]["R"]}" \n')
-    #     file.write("}\n")
-    #     file.close()
-    #     exit()
-    return map_data, positions
+            After examining the maps a bit longer, your attention is drawn to a curious fact:
+            the number of nodes with names ending in A is equal to the number ending in Z!
+            If you were a ghost, you'd probably just start at every node that ends with A and
+            follow all of the paths at the same time until they all simultaneously end up at nodes that end with Z.
 
+            For example:
 
-def c2023d8p1(data=example):
-    lines = re.split(r"\n+", data)
-    map_data, positions = make_map(lines)
-    # print(json.dumps(map_data, indent=1))
-    current_position = "AAA"
-    directions = lines[0]
-    dir_len = len(lines[0])
-    step = 0
-    while current_position != "ZZZ":
-        current_position = map_data[current_position][directions[step % dir_len]]
-        step += 1
-    return step
+            LR
 
+            11A = (11B, XXX)
+            11B = (XXX, 11Z)
+            11Z = (11B, XXX)
+            22A = (22B, XXX)
+            22B = (22C, 22C)
+            22C = (22Z, 22Z)
+            22Z = (22B, 22B)
+            XXX = (XXX, XXX)
+            Here, there are two starting nodes, 11A and 22A (because they both end with A).
+            As you follow each left/right instruction, use that instruction to simultaneously
+            navigate away from both nodes you're currently on.
+            Repeat this process until all of the nodes you're currently on end with Z.
+            (If only some of the nodes you're on end with Z, they act like any other node and you continue as normal.)
+            In this example, you would proceed as follows:
 
-def c2023d8p2(data=example2):
-    """--- Part Two ---
-        The sandstorm is upon you and you aren't any closer to escaping the wasteland.
-        You had the camel follow the instructions, but you've barely left your starting position.
-        It's going to take significantly more steps to escape!
+            Step 0: You are at 11A and 22A.
+            Step 1: You choose all of the left paths, leading you to 11B and 22B.
+            Step 2: You choose all of the right paths, leading you to 11Z and 22C.
+            Step 3: You choose all of the left paths, leading you to 11B and 22Z.
+            Step 4: You choose all of the right paths, leading you to 11Z and 22B.
+            Step 5: You choose all of the left paths, leading you to 11B and 22C.
+            Step 6: You choose all of the right paths, leading you to 11Z and 22Z.
+            So, in this example, you end up entirely on nodes that end in Z after 6 steps.
 
-        What if the map isn't for people - what if the map is for ghosts?
-        Are ghosts even bound by the laws of spacetime? Only one way to find out.
+            Simultaneously start on every node that ends with A.
+            How many steps does it take before you're only on nodes that end with Z?
+        """
+        lines = re.split(r"\n+", data)
+        map_data, positions = Day.make_map(lines)
+        # print(json.dumps(map_data, indent=1))
+        directions = lines[0]
+        dir_len = len(lines[0])
+        print(f"Found {len(map_data)} crossroads and {len(positions)} starting positions : ", positions)
+        step = 0
+        next_log = 100
 
-        After examining the maps a bit longer, your attention is drawn to a curious fact:
-        the number of nodes with names ending in A is equal to the number ending in Z!
-        If you were a ghost, you'd probably just start at every node that ends with A and
-        follow all of the paths at the same time until they all simultaneously end up at nodes that end with Z.
+        while not Day.is_end(positions):
+            dir_step = directions[step % dir_len]
+            for i in range(len(positions)):
+                positions[i] = map_data[positions[i]][dir_step]
+            step += 1
+            if step > next_log:
+                print(f"Already took {step} steps, got ", positions)
+                next_log *= 2
 
-        For example:
+        print(f"It took {step} steps")
+        return step
 
-        LR
+    @staticmethod
+    def is_end(s):
+        # print("Is end :", s)
+        for i in s:
+            if i[2] != "Z":
+                return False
+        return True
 
-        11A = (11B, XXX)
-        11B = (XXX, 11Z)
-        11Z = (11B, XXX)
-        22A = (22B, XXX)
-        22B = (22C, 22C)
-        22C = (22Z, 22Z)
-        22Z = (22B, 22B)
-        XXX = (XXX, XXX)
-        Here, there are two starting nodes, 11A and 22A (because they both end with A).
-        As you follow each left/right instruction, use that instruction to simultaneously
-        navigate away from both nodes you're currently on.
-        Repeat this process until all of the nodes you're currently on end with Z.
-        (If only some of the nodes you're on end with Z, they act like any other node and you continue as normal.)
-        In this example, you would proceed as follows:
-
-        Step 0: You are at 11A and 22A.
-        Step 1: You choose all of the left paths, leading you to 11B and 22B.
-        Step 2: You choose all of the right paths, leading you to 11Z and 22C.
-        Step 3: You choose all of the left paths, leading you to 11B and 22Z.
-        Step 4: You choose all of the right paths, leading you to 11Z and 22B.
-        Step 5: You choose all of the left paths, leading you to 11B and 22C.
-        Step 6: You choose all of the right paths, leading you to 11Z and 22Z.
-        So, in this example, you end up entirely on nodes that end in Z after 6 steps.
-
-        Simultaneously start on every node that ends with A.
-        How many steps does it take before you're only on nodes that end with Z?
-    """
-    lines = re.split(r"\n+", data)
-    map_data, positions = make_map(lines)
-    # print(json.dumps(map_data, indent=1))
-    directions = lines[0]
-    dir_len = len(lines[0])
-    print(f"Found {len(map_data)} crossroads and {len(positions)} starting positions : ", positions)
-    step = 0
-    next_log = 100
-
-    while not is_end(positions):
-        dir_step = directions[step % dir_len]
-        for i in range(len(positions)):
-            positions[i] = map_data[positions[i]][dir_step]
-        step += 1
-        if step > next_log:
-            print(f"Already took {step} steps, got ", positions)
-            next_log *= 2
-
-    print(f"It took {step} steps")
-    return step
-
-
-if __name__ == "__main__":
-    print("########################")
-    print("####    TEST ALGO   ####")
-    ok = "ok" if c2023d8p1() == 2 else "ko"
-    print(f"##  c2023d8p1 => {ok}    #")
-    ok = "ok" if c2023d8p2() == 6 else "ko"
-    print(f"##  c2023d8p2 => {ok}    #")
-    print("########################")
-    print("#   WITH PUZZLE INPUT  #")
-    with open('2023/d8.txt', 'r') as file:
-        input_data: str = file.read()
-        print(f"# c2023d8p1 => {c2023d8p1(input_data)} #")  # 13771
-        print(f"# c2023d8p2 => {c2023d8p2(input_data)} #")
-    print("########################")
+    @staticmethod
+    def make_map(lines):
+        map_data = {}
+        positions = []
+        for i in range(len(lines) - 1):
+            cross = lines[i + 1]
+            map_data[cross[0:3]] = {
+                "L": cross[7:10],
+                "R": cross[12:15]
+            }
+            if cross[2] == "A":
+                positions.append(cross[0:3])
+        # with open('2023/d8.dot', 'w') as file:
+        #     file.write("digraph day8 {\n")
+        #     for m in map_data:
+        #         file.write(f'  "{m}" -> "{map_data[m]["L"]}" \n')
+        #         file.write(f'  "{m}" -> "{map_data[m]["R"]}" \n')
+        #     file.write("}\n")
+        #     file.close()
+        #     exit()
+        return map_data, positions

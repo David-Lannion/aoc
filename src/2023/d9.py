@@ -85,89 +85,67 @@ example2 = "10 13 16 21 30 45"
 
 class Day(DayBase):
     def do(self):
-        self.test(4361, 467835, example)
-        self.run(520135, 72514855)
+        self.test(114, 2, example)
+        self.run(1_637_452_029, 908)
 
     @staticmethod
     def part1(data=example):
-        pass
+        lines = re.split(r"\n+", data)
+        res = 0
+        for line in lines:
+            next_res = 0
+            seq = [int(e) for e in re.split(" ", line)]
+            curr = seq
+            while sum(curr) != 0:
+                next_res += curr[-1]
+                curr = Day.next_level(curr)
+            res += next_res
+        return res
 
     @staticmethod
     def part2(data=example):
-        pass
-def next_level(s):
-    return [s[i + 1] - s[i] for i in range(len(s) - 1)]
+        """--- Part Two ---
+        Of course, it would be nice to have even more history included in your report.
+        Surely it's safe to just extrapolate backwards as well, right?
 
+        For each history, repeat the process of finding differences until the sequence of differences is entirely zero.
+        Then, rather than adding a zero to the end and filling in the next values of each previous sequence,
+        you should instead add a zero to the beginning of your sequence of zeroes,
+        then fill in new first values for each previous sequence.
 
-def c2023d9p1(data=example):
-    lines = re.split(r"\n+", data)
-    res = 0
-    for line in lines:
-        next_res = 0
-        seq = [int(e) for e in re.split(" ", line)]
-        curr = seq
-        while sum(curr) != 0:
-            next_res += curr[-1]
-            curr = next_level(curr)
-        res += next_res
-    return res
+        In particular, here is what the third example history looks like when extrapolating back in time:
 
+        5  10  13  16  21  30  45
+          5   3   3   5   9  15
+           -2   0   2   4   6
+              2   2   2   2
+                0   0   0
+        Adding the new values on the left side of each sequence from bottom to top eventually reveals
+        the new left-most history value: 5.
 
-def c2023d9p2(data=example):
-    """--- Part Two ---
-    Of course, it would be nice to have even more history included in your report.
-    Surely it's safe to just extrapolate backwards as well, right?
+        Doing this for the remaining example data above results in previous values of -3 for the first history and 0
+        for the second history. Adding all three new values together produces 2.
 
-    For each history, repeat the process of finding differences until the sequence of differences is entirely zero.
-    Then, rather than adding a zero to the end and filling in the next values of each previous sequence,
-    you should instead add a zero to the beginning of your sequence of zeroes,
-    then fill in new first values for each previous sequence.
+        Analyze your OASIS report again, this time extrapolating the previous value for each history.
+        What is the sum of these extrapolated values?"""
+        lines = re.split(r"\n+", data)
+        res = 0
+        for line in lines:
+            next_res = 0
+            seq = [int(e) for e in re.split(" ", line)]
+            curr = seq
+            toggle = True
+            while sum(curr) != 0:
+                if toggle:
+                    next_res += curr[0]
+                else:
+                    next_res -= curr[0]
+                curr = Day.next_level(curr)
+                toggle = not toggle
+            res += next_res
+        # print(res)
+        return res
 
-    In particular, here is what the third example history looks like when extrapolating back in time:
-
-    5  10  13  16  21  30  45
-      5   3   3   5   9  15
-       -2   0   2   4   6
-          2   2   2   2
-            0   0   0
-    Adding the new values on the left side of each sequence from bottom to top eventually reveals
-    the new left-most history value: 5.
-
-    Doing this for the remaining example data above results in previous values of -3 for the first history and 0
-    for the second history. Adding all three new values together produces 2.
-
-    Analyze your OASIS report again, this time extrapolating the previous value for each history.
-    What is the sum of these extrapolated values?"""
-    lines = re.split(r"\n+", data)
-    res = 0
-    for line in lines:
-        next_res = 0
-        seq = [int(e) for e in re.split(" ", line)]
-        curr = seq
-        toggle = True
-        while sum(curr) != 0:
-            if toggle:
-                next_res += curr[0]
-            else:
-                next_res -= curr[0]
-            curr = next_level(curr)
-            toggle = not toggle
-        res += next_res
-    # print(res)
-    return res
-
-
-if __name__ == "__main__":
-    print("########################")
-    print("####    TEST ALGO   ####")
-    ok = "ok" if c2023d9p1() == 114 else "ko"
-    print(f"##  c2023d9p1 => {ok}    #")
-    ok = "ok" if c2023d9p2() == 2 else "ko"
-    print(f"##  c2023d9p2 => {ok}    #")
-    print("########################")
-    print("#   WITH PUZZLE INPUT  #")
-    with open('2023/d9.txt', 'r') as file:
-        input_data: str = file.read()
-        print(f"# c2023d9p1 => {c2023d9p1(input_data)} #")  # 1637452029
-        print(f"# c2023d9p2 => {c2023d9p2(input_data)} #")  # 0
-    print("########################")
+    @staticmethod
+    def next_level(s):
+        return [s[i + 1] - s[i] for i in range(len(s) - 1)]

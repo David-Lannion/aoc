@@ -73,11 +73,10 @@ from ..day import DayBase
 example = """"""
 
 
-
 class Day(DayBase):
     def do(self):
-        self.test(4361, 467835, example)
-        self.run(520135, 72514855)
+        self.test(None, None, example)
+        self.run(None, None)
 
     @staticmethod
     def part1(data=example):

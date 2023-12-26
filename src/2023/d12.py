@@ -61,13 +61,25 @@
     ????.#...#... 4,1,1
     ????.######..#####. 1,6,5
     ?###???????? 3,2,1
-    Equipped with this information, it is your job to figure out how many different arrangements of operational and broken springs fit the given criteria in each row.
+    Equipped with this information, it is your job to figure out how many different
+    arrangements of operational and broken springs fit the given criteria in each row.
 
-    In the first line (???.### 1,1,3), there is exactly one way separate groups of one, one, and three broken springs (in that order) can appear in that row: the first three unknown springs must be broken, then operational, then broken (#.#), making the whole row #.#.###.
+    In the first line (???.### 1,1,3), there is exactly one way separate groups of
+    one, one, and three broken springs (in that order) can appear in that row:
+    the first three unknown springs must be broken, then operational, then broken (#.#), making the whole row #.#.###.
 
-    The second line is more interesting: .??..??...?##. 1,1,3 could be a total of four different arrangements. The last ? must always be broken (to satisfy the final contiguous group of three broken springs), and each ?? must hide exactly one of the two broken springs. (Neither ?? could be both broken springs or they would form a single contiguous group of two; if that were true, the numbers afterward would have been 2,3 instead.) Since each ?? can either be #. or .#, there are four possible arrangements of springs.
+    The second line is more interesting: .??..??...?##. 1,1,3 could be a total of four different arrangements.
+    The last ? must always be broken (to satisfy the final contiguous group of three broken springs),
+    and each ?? must hide exactly one of the two broken springs.
+    (Neither ?? could be both broken springs or they would form a single contiguous group of two;
+    if that were true, the numbers afterward would have been 2,3 instead.)
+    Since each ?? can either be #. or .#, there are four possible arrangements of springs.
 
-    The last line is actually consistent with ten different arrangements! Because the first number is 3, the first and second ? must both be . (if either were #, the first number would have to be 4 or higher). However, the remaining run of unknown spring conditions have many different ways they could hold groups of two and one broken springs:
+    The last line is actually consistent with ten different arrangements!
+    Because the first number is 3, the first and second ? must both be .
+    (if either were #, the first number would have to be 4 or higher).
+    However, the remaining run of unknown spring conditions have many different ways
+    they could hold groups of two and one broken springs:
 
     ?###???????? 3,2,1
     .###.##.#...
@@ -90,7 +102,8 @@
     ?###???????? 3,2,1 - 10 arrangements
     Adding all of the possible arrangement counts together produces a total of 21 arrangements.
 
-    For each row, count all of the different arrangements of operational and broken springs that meet the given criteria. What is the sum of those counts?
+    For each row, count all of the different arrangements of operational and broken springs
+    that meet the given criteria. What is the sum of those counts?
 """
 from ..day import DayBase
 
@@ -134,35 +147,14 @@ class Picross:
 
 class Day(DayBase):
     def do(self):
-        self.test(4361, 467835, example)
-        self.run(520135, 72514855)
+        self.test(21, None, example)
+        self.run(None, None)
 
     @staticmethod
     def part1(data=example):
-        pass
+        Picross(data)
+        return None
 
     @staticmethod
     def part2(data=example):
-        pass
-def c2023d12p1(data=example):
-    Picross(data)
-
-
-def c2023d12p2(data=example):
-    pass
-
-
-if __name__ == "__main__":
-    print("########################")
-    print("####    TEST ALGO   ####")
-    ok = "ok" if c2023d12p1() == 21 else "ko"
-    print(f"##  c2023d12p1 => {ok}    #")
-    ok = "ok" if c2023d12p2() == 6 else "ko"
-    print(f"##  c2023d12p2 => {ok}    #")
-    print("########################")
-    print("#   WITH PUZZLE INPUT  #")
-    with open('2023/d12.txt', 'r') as file:
-        input_data: str = file.read()
-        print(f"# c2023d12p1 => {c2023d12p1(input_data)} #")  # 13771
-        print(f"# c2023d12p2 => {c2023d12p2(input_data)} #")
-    print("########################")
+        return None
