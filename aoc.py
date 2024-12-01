@@ -19,7 +19,10 @@ if __name__ == "__main__":
         create = input() == 'y'
         if create:
             base_name = f".{os.sep}src{os.sep}{options.year}{os.sep}"
-            open(f"{base_name}data{os.sep}d{options.day}.txt", "w").close()
+            dirname = os.path.dirname(f"{base_name}{os.sep}data")
+            if not os.path.exists(dirname):
+                os.makedirs(dirname)
+            open(f"{base_name}data{os.sep}d{options.day}.txt", "x").close()
             with open(f"{base_name}d{options.day}.py", "w") as file:
                 file.write('''""""""
 from ..day import DayBase

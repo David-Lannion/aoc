@@ -115,44 +115,83 @@ class Mirror:
         self.horizontal = None
         self.value = 0
 
-        def check_line(mirror: list, line: int, length: int):
-            check = True
-            # print("Got line ", line)
-            # print([length - line - 2, line])
-            for reflect_line in range(max(0, min(length - line - 2, line)) + 1):
-                if mirror[line - reflect_line] != mirror[line + 1 + reflect_line]:
-                    check = False
-                    break
-            return check
-
         # Check horizontal mirroring
-        for line in range(self.height - 1):
-            if self.mirror[line] == self.mirror[line + 1]:
-                if check_line(self.mirror, line, self.height):
-                    self.horizontal = line
-                    break
+        self.check_horizontal_mirroring()
         # Check vertical mirroring
-        for line in range(self.width - 1):
-            if self.t_mirror[line] == self.t_mirror[line + 1]:
-                if check_line(self.t_mirror, line, self.width):
-                    self.vertical = line
-                    break
+        self.check_vertical_mirroring()
 
         # Process value
-        if self.vertical is not None:
-            self.value += self.vertical + 1
-        if self.horizontal is not None:
-            self.value += 100 * (self.horizontal + 1)
+        self.value = self.val()
         # print(f"Vertical : {self.vertical}")
         # print(f"Horizontal : {self.horizontal}")
 
+    def val(self):
+        value = 0
+        if self.vertical is not None:
+            value += self.vertical + 1
+        if self.horizontal is not None:
+            value += 100 * (self.horizontal + 1)
+        return value
 
+    def val2(self, base):
+        value = 0
+        if self.vertical is not None and base.vertical != self.vertical:
+            value += self.vertical + 1
+        if self.horizontal is not None and base.horizontal != self.horizontal:
+            value += 100 * (self.horizontal + 1)
+        return value
+
+    @staticmethod
+    def check_line(mirror: list, line: int, length: int):
+        check = True
+        # print("Got line ", line)
+        # print([length - line - 2, line])
+        for reflect_line in range(max(0, min(length - line - 2, line)) + 1):
+            if mirror[line - reflect_line] != mirror[line + 1 + reflect_line]:
+                check = False
+                break
+        return check
+
+    def check_horizontal_mirroring(self):
+        for line in range(self.height - 1):
+            if self.mirror[line] == self.mirror[line + 1]:
+                if Mirror.check_line(self.mirror, line, self.height):
+                    self.horizontal = line
+                    break
+
+    def check_vertical_mirroring(self):
+        # Check vertical mirroring
+        for line in range(self.width - 1):
+            if self.t_mirror[line] == self.t_mirror[line + 1]:
+                if Mirror.check_line(self.t_mirror, line, self.width):
+                    self.vertical = line
+                    break
+
+    @staticmethod
+    def find_smudge(data):
+        mirror = data.splitlines()
+        mirror_base = Mirror(data)
+        res = []
+        mirror_x = [i for i in mirror]
+        for x in range(len(mirror)):
+            for y in range(len(mirror[0])):
+                mirror_x[x] = Mirror.set_char(mirror[x], y, "." if mirror[x][y] == "#" else "#")
+                mirror_c = Mirror("\n".join(mirror_x))
+                res.append(mirror_c.val2(mirror_base))
+            mirror_x[x] = mirror[x]
+        return max(res) if len(res) > 0 else 0
+
+    @staticmethod
+    def set_char(string, position, valeur):
+        s = list(string)
+        s[position] = valeur
+        return "".join(s)
 
 
 class Day(DayBase):
     def do(self):
-        self.test(None, None, example)
-        self.run(None, None)
+        self.test(405, 400, example)
+        self.run(34_918, None)  # 22_820 < res_p2 < 40_938
 
     @staticmethod
     def part1(data=example):
@@ -160,6 +199,7 @@ class Day(DayBase):
         res = 0
         for m in mirrors:
             res += Mirror(m).value
+            # print(res)
         return res
 
     @staticmethod
@@ -171,27 +211,11 @@ class Day(DayBase):
             Upon closer inspection, you discover that every mirror has exactly one smudge:
             exactly one . or # should be the opposite type.
 
-            In each pattern, you'll need to locate and fix the smudge that causes a different reflection line to be valid.
+            In each pattern, you'll need to locate and fix the smudge
+            that causes a different reflection line to be valid.
             (The old reflection line won't necessarily continue being valid after the smudge is fixed.)
 
-            Here's the above example again:
-
-            #.##..##.
-            ..#.##.#.
-            ##......#
-            ##......#
-            ..#.##.#.
-            ..##..##.
-            #.#.##.#.
-
-            #...##..#
-            #....#..#
-            ..##..###
-            #####.##.
-            #####.##.
-            ..##..###
-            #....#..#
-            The first pattern's smudge is in the top-left corner.
+            Taking the above example, the first pattern's smudge is in the top-left corner.
             If the top-left # were instead ., it would have a different, horizontal line of reflection:
 
             1 ..##..##. 1
@@ -226,4 +250,8 @@ class Day(DayBase):
         :param data:
         :return:
         """
-        return None
+        mirrors = re.split("\n\n+", data)
+        res = 0
+        for m in mirrors:
+            res += Mirror.find_smudge(m)
+        return res

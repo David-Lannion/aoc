@@ -80,7 +80,7 @@ if __name__ == "__main__":
     print(f"##  c2015d6p2 => {ok}  #")
     print("######################")
     print("# WITH PUZZLE INPUT  #")
-    with open('2015/d6.txt', 'r') as file:
+    with open('2015/data/d6.txt', 'r') as file:
         input_data: str = file.read()
         print(f"# c2015d6p1 => {c2015d6p1(input_data)} #")
         print(f"# c2015d6p2 => {c2015d6p2(input_data)} #")
